@@ -1,0 +1,1243 @@
+---
+title: "Exercices_R_LERUYET_Mathieu.qmd"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Module 1
+
+Question 1 : créer le vecteur qui contient tous les multiples de 3 entre 1 et 50
+
+```{r}
+vec = seq(3,50,3)
+print(vec)
+# On prend une sequence entre 3 et 50 avec un pas de 3 pour avoir ces multiples dans cet interval
+```
+
+2.  Créer la fonction "tronque()" qui prend en argument un nombre x et un vecteur vec et qui change tous les éléments du vecteur vec supérieur à x en x. Tester la fonction sur le vecteur que vous avez créé dans la question 1.
+
+```{r}
+# Créer la fonction
+tronque = function(x, vec){
+  vec[vec>x]=x
+  return(vec)
+}
+tronque(10, vec)
+# Les valeurs supérieures à 10 sont remplacées par 10 dans le vecteur vec 
+```
+
+3.  Créer la fonction "maxi()" qui a un vecteur numérique associe son élément maximum "à la main". On n’utilisera pas les fonctions de R déjà implémentées max(),min(),sort() mais on utilisera une boucle for.
+
+    ```{r}
+    # Créer la fonction maxi
+    maxi = function(vec){
+      max = vec[1]
+      print(max)
+      for (i in vec){ 
+        
+        if (i > max){
+          max = i
+          
+        }
+      }
+      return(max)
+
+    }
+
+    # Definir le vecteur
+    vec2 = c(2,30,4)
+
+    # Tester la fonction
+    resultat = maxi(vec2)
+
+    # Afficher les résultats 
+    print(resultat)
+
+    # La valeur maximale renvoyée est 30
+
+    ```
+
+4.  Créer un data-frame regroupant 10 étudiants avec leur nom, prénom, âge, sexe, entreprise dans laquelle est effectuée l’alternance. Calculer l’âge moyen des étudiants et la proportion de femmes. Créer une variable de tranche d’âge avec au moins trois modalités et calculer l’âge moyen et la proportion de femmes par tranche d’âge.
+
+    ```{r}
+    # Création du dataframe
+    df = data.frame(Nom=c("Martin", "Bernard", "Dubois", "Thomas", "Robert", "Richard", "Petit", "Durand", "Leroy", "Moreau"),Prenom =c("Jean", "Pierre", "Marie", "Sophie", "Luc", "Camille", "Emma", "Hugo", "Léa", "Paul"),age=c(23,24,25,26,24,32,43,29,36,27), sexe=c("Homme","Homme","Femme","Femme","Homme","Femme","Femme","Homme","Femme","Homme"),entreprise=c("Total", "L'Oréal", "EDF", "Airbus", "Sanofi", "Orange", "Renault", "LVMH", "Danone", "BNP Paribas"))
+
+    # Calcul de l'age moyen
+    mean_age = mean(df$age)
+
+    # Afficher l'âge moyen
+    cat("Age moyen:", mean_age, "ans\n")
+
+
+    # Calcul de la proportion de femmes
+    prop_femme = (sum(df$sexe == "Femme")/nrow(df))*100
+
+
+    # Affiche la proportion
+    cat("Proportion de femme",prop_femme, "%\n")
+
+    # créer des vecteurs de valeurs pour chaque classe
+    jeunes_diplomes = c()
+    professionnels = c()
+    experimentes = c()
+
+    # Classer selon l'age
+
+    for (i in 1:nrow(df)) {
+      age = df$age[i]
+      
+      if (age >= 18 && age <= 24) {
+        jeunes_diplomes = c(jeunes_diplomes,i)
+      } else if (age >= 25 && age <= 34) {
+         professionnels = c(professionnels, i)
+      } else if (age >= 35 && age <= 44) {
+        experimentes = c(experimentes,i)
+      }
+    }
+    # Ceux qui ont entre 18 et 24 sont dans la classe jeunes_diplomés,
+    # les 25-34 ans sont dans professionnels, les 35-44 ans dans experimentés
+
+    # Calcul Âge moyen
+    age_moyen_jeunes <- mean(df$age[jeunes_diplomes])
+    age_moyen_pros <- mean(df$age[professionnels])
+    age_moyen_exps <- mean(df$age[experimentes])
+
+    # Calcul Proportion de femmes
+    prop_femme_jeunes = (sum(df$sexe[jeunes_diplomes] == "Femme") / length(jeunes_diplomes)) * 100
+    prop_femme_pros = (sum(df$sexe[professionnels] == "Femme") / length(professionnels)) * 100
+    prop_femme_exps = (sum(df$sexe[experimentes] == "Femme") / length(experimentes)) * 100
+                         
+    # Afficher les résultats                     
+    cat("Jeunes diplômés (18-24) : Âge moyen =", age_moyen_jeunes, "ans", "| Prop. femmes =", prop_femme_jeunes, "%\n")
+    cat("Professionnels (25-34) : Âge moyen =", age_moyen_pros, "ans", "| Prop. femmes =", prop_femme_pros, "%\n")
+    cat("Expérimentés (35-44) : Âge moyen =", age_moyen_exps, "ans", "| Prop. femmes =", prop_femme_exps, "%\n")
+
+
+
+
+    ```
+
+On affiche au dessus l'âge moyen et la proportion de femmes pour chaque sous-groupe.
+
+## Module 2
+
+1\. Importer les données PisaFR et observer si la structure des données est la même que PisaUS
+
+```{r}
+# Import Pisa_US
+pisa_us = read.table("cours1/Data/PisaUS.csv", header = TRUE, sep =";", dec =",", na=" ")
+# Lire les données
+class(pisa_us)
+# Afficher les premières lignes du dataframe
+head(pisa_us)
+```
+
+```{r}
+# Import Pisa_FR
+pisa_fr = read.table("cours1/Data/PisaFR.csv", header = TRUE, sep =";", dec =",", na=" ")
+# Lire les données
+class(pisa_fr)
+# Afficher les premières lignes du dataframe
+head(pisa_fr)
+```
+
+```{r}
+# Afficher la structure des données
+str(pisa_us)
+```
+
+```{r}
+# Afficher la structure des données
+str(pisa_fr)
+```
+
+Comparaison: Les deux datasets ont les mêmes variables, au nombre de 11, et elles ont les mêmes types. La structure des données semble être la même. La vraibale GLCM pourra être supprimée car elle ne contient que des valeurs nulles.
+
+2\. (Sans utiliser dplyr ni ggplot2) Supprimer la colonne GLCM. Supprimer toutes les observations dont la somme des notes en français (READ) et en maths (MATH) est inférieure à 1000, ainsi que celles des étudiants dont les notes en sciences (SCIE) sont inférieures à 500. Effectuer un histogramme pour vérifier que votre filtre a bien fonctionné pour la dernière condition
+
+```{r}
+# Suppression de la colonne GLCM
+pisa_fr$GLCM = NULL
+# Suppression des observations avec notes en SCIENCES < 500
+pisa_fr = pisa_fr[pisa_fr[,5]>500,]
+# Suppression des observations avec notes Maths + Lecture < 1000
+pisa_fr = pisa_fr[pisa_fr[,3]+pisa_fr[,4]>1000,]
+# Afficher la structure des données
+str(pisa_fr)
+```
+
+Le résultat est conforme aux attentes.
+
+```{r}
+# Histogramme
+hist(pisa_fr$MATH+pisa_fr$READ)
+```
+
+L'histogramme nous confirme que le filtre a bien fonctionné.
+
+3\. Refaire la question 2 en utlisant les commandes des packages dplyr et ggplot2
+
+```{r}
+library(dplyr)
+
+# Import Pisa_FR
+df = read.table("cours1/Data/PisaFR.csv", header = TRUE, sep =";", dec =",", na=" ")
+# Suppression de la colonne GLCM
+df = select(df, -GLCM)
+# Ne garder que les notes supérieures à 500 en sciences
+df = filter(df, SCIE>500)
+# Suppression des observations avec notes Maths + Lecture < 1000
+df = filter(df, MATH+READ>1000)
+# stocker l'addition des notes MATH et READ dans une variable
+df = mutate(df,mathread = MATH+READ)
+# Afficher le df
+head(df)
+# Tracer l'histogramme
+library (ggplot2) 
+
+ggplot(df) + aes(x=mathread) + geom_histogram()
+```
+
+4\. Manipuler les données en utilisant les commandes slice, filter, select, relocate, rename, arrange, mutate, group_by et le pipe.
+
+```{r}
+
+# Import Pisa_FR
+df2 = read.table("cours1/Data/PisaFR.csv", header = TRUE, sep =";", dec =",", na=" ")
+
+# Manipulation des données
+resultat = df2 %>%                    # piper les résultats des opérations
+  select(COUNT, MATH, READ, SCIE) %>% # selection variables
+  filter(MATH > 250) %>%              # garder les notes > 250 en maths
+  slice(1:1000) %>%                   # garder 1000 lignes
+  relocate(SCIE, .after = COUNT) %>%  # reordonner les colonnes
+  mutate(MOYENNE = (MATH + READ + SCIE) / 3,
+         NOTE_LETTRE = case_when(
+         MOYENNE >= 600 ~ "A",
+         MOYENNE >= 500 ~ "B",
+         MOYENNE >= 400 ~ "C",
+         MOYENNE >= 300 ~ "D",
+         TRUE ~ "E"
+         )
+         ) %>%                        # créer 2 nouvelles variables 
+  
+  group_by(NOTE_LETTRE) %>%           # grouper par note en lettre
+  arrange(desc(NOTE_LETTRE))          # afficher d'abord plus mauvaises                                         # notes
+
+print(resultat)
+  
+  
+
+```
+
+5\. Supprimer toutes les données et recharger de nouveau PisaFR. Réaliser quelques statistiques descriptives et graphiques descriptifs en variant les commandes. Commenter. Que faut-il retenir de ce jeu de données ?
+
+```{r}
+# supression des objets de l'environnement
+rm( list =ls ())
+# Recharger PisaFR
+pisa_fr = read.table("cours1/Data/PisaFR.csv", header = TRUE, sep =";", dec =",", na=" ")
+
+# Statistiques descriptives
+summary
+# Calcul des notes moyennes pour MATH, READ, SCIENCES
+apply (pisa_fr [ ,3:5], MARGIN =2,mean)
+# Les moyennes sont autour de 485 pour ces 3 matières
+apply (pisa_fr [ ,3:5], MARGIN =2,median)
+# Les medianes sont proches de 490 avec des notes plus élevées en maths
+
+# En détail
+
+# Notes en Maths
+summary (pisa_fr$MATH)
+# Les notes vont de 170.6 à 733.4 avec une moyenne à 487
+
+# Notes en Lecture
+summary (pisa_fr$READ)
+# Les notes vont de 163.9 à 793.4 avec une moyenne à 483.8
+
+# Notes en SCIENCES
+summary (pisa_fr$SCIE)
+# Les notes vont de 204.5 à 750.8 avec une moyenne à 485
+
+# Histogramme des notes en Sciences
+hist(pisa_fr$SCIE)
+
+# Calcul des notes en
+m = mean(pisa_fr$SCIE)
+s = sd(pisa_fr$SCIE)
+
+hist ( pisa_fr$SCIE , freq =F , col =" grey ", main =" Histogramme ",
+ylim =c(0,0.005), xlab = " Histogramme et approximation par une normale ")
+curve ( dnorm (x ,m , s ) , add =T , lwd =2) # ajout d’ une courbe
+# dnorme génère une densité d’ une distribution normale
+# de moyenne m et d’écart - type s
+
+# Creation des boites à moustache pour voir la médiane, 1er et 3è quartile
+boxplot (pisa_fr$READ, pisa_fr$MATH, pisa_fr$SCIE, horizontal = TRUE,
+names =c("Read","Math","Science"), col =c("blue","red","green"))
+
+# On voit quelques valeurs extrêmes sur des notes de maths très basses
+# Les notes en lecture sont plus hétérogènes
+
+# Graphes bivariés des notes en sciences en fonction de celles en MATHS 
+
+plot(pisa_fr$MATH, pisa_fr$SCIE, col =" blue ")
+abline (lm( pisa_fr$SCIE ~ pisa_fr$MATH ) , col ="red ")
+# il y a visiblement une forte corrélation entre les 2 variables comme
+# l'indiquent la forme du nuage de points et la droite de régression
+
+cor(pisa_fr$MATH, pisa_fr$SCIE)
+# Cela est confirmé par le coefficient de corrélation de 0.92
+
+# Avec GGplot
+
+# Notes en lecture en fonction de celles en maths
+linreg1 = lm(pisa_fr$READ ~ pisa_fr$MATH)
+NotesLPred = predict(linreg1)
+
+# Notes en science en fonction de celles en lecture
+linreg2 = lm(pisa_fr$SCIE ~ pisa_fr$READ)
+NotesSPred = predict(linreg2)
+
+# Creation des graphiques
+
+library (cowplot)
+
+g1 = ggplot ()+ aes (x = pisa_fr$MATH, y = pisa_fr$READ )+ geom_point() + geom_line ( aes ( x = pisa_fr$MATH, y = NotesLPred ), col ="red")+
+ggtitle ("notes lecture et en maths")
+
+g2 = ggplot ()+ aes (x = pisa_fr$READ, y = pisa_fr$SCIE )+ geom_point() + geom_line ( aes ( x = pisa_fr$READ, y = NotesSPred), col ="blue")+
+ggtitle ("notes en sciences et lecture")
+plot_grid(g1,g2)
+```
+
+Conclusion : A ce niveau d'études, il semblerait que les élèves bons dans une matière le sont aussi dans les autres.
+
+## Module 3
+
+1\. Importer les données SAHeart et observer la structure des données
+
+```{r}
+# supression des objets de l'environnement
+rm( list =ls ())
+gc()
+
+# Recharger SAheart
+sa_heart = read.table("cours1/Data/SAheart.csv", header = TRUE, sep =",", dec =".", na=" ")
+str(sa_heart)
+```
+
+Le jeu de données contient 462 observations pour 10 variables. Il y a différents types de variables, numériques, qualitatives(famhist). Le jeu de données étudie la présence de maladie coronarienne en fonction de certains critères de risques comme la consommation de tabac, d'alcool etc. Notre variable à prédire est donc chd et les autres sont des variables explicatives.
+
+2\. Dans un premier temps nous allons conserver seulement les variables quantitatives. Supprimer deux colonnes du jeu de données en conséquence.
+
+```{r}
+# Importation dplyr 
+
+library(dplyr)
+
+# Les colonnes à supprimer sont celles avec le type "chr" (famhist et chd)
+df3 = select(sa_heart, -famhist, -chd)
+
+
+
+```
+
+3\. Transformer les données afin d’effectuer une ACP. Tracer le nuage des individus et le nuage des variables. Donnez une interprétation aux deux premiers axes. Quel pourcentage de la variance des observations est expliquée par les deux premiers axes ? Commenter le nuage des variables.
+
+```{r}
+
+#Importer les librairies dédiées
+library ( factoextra )
+library ( FactoMineR )
+
+# Le jeu de données comporte des variables avec des unités différentes. On doit donc centrer et réduire les variables
+
+# Centrer Réduire
+df3.cr = scale(df3, center=T, scale=T)
+
+# faire ACP
+res.pca = PCA(df3.cr)
+```
+
+```{r}
+# Nuage des individus sans chevauchement des tags
+fviz_pca_ind(res.pca, repel = TRUE)
+
+# Nuage des variables : cercle des corrélations
+fviz_pca_var(res.pca, col.var = "orange")
+
+
+```
+
+Interprétation : le nuage des individus est illisible pour un humain du fait du nombre de données. Le nuage de variable avec le cercle des corrélations nous indique 2 dimensions qui expliquent environ 50% de la variance. Les flèches les plus grandes sont les variables les plus contributives. Par exemple adiposity et âge semblent le plus contribuer à la dimension 1 et alcohol à la 2. La juxtaposition de certaines variables rend utile l'ajout de visualisations supplémentaires.
+
+```{r}
+library ( corrplot )
+var <- get_pca_var(res.pca ) # récupère les résultats sur les variables
+corrplot (var$contrib, is.corr = FALSE )
+```
+
+Interprétation : Pour la dimension 1 les variables les plus contributives sont adiposity, age et obesity. Pour l'axe 2 alcohol et tobacco sont les plus contributives. Obesity et ldl sont fortement corrélées entre elles, de même que sbp et age. On peut faire apparaître cette dimension de manière plus nette ci-dessous.
+
+```{r}
+fviz_pca_var ( res.pca ,
+col.var = "contrib", # Argument qui indique comment
+# colorer chaque point
+gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07") ,
+repel = TRUE 
+)
+
+```
+
+4\. Dans le nuage des individus, colorer les points en fonction des deux variables non quantitatives que vous avez initialement supprimées. Commenter
+
+```{r}
+# la fonction fviz_pca_ind() ne permet pas de colorer avec plus
+# d'une variable qualitative. Donc on doit faire 2 graphiques ou alors une combinaison linéaire des 2 variables
+
+# Combinaison linéaire des 2 variables
+sa_heart$Group = interaction(sa_heart$famhist, sa_heart$chd)
+
+fviz_pca_ind(res.pca, habillage = sa_heart$Group)
+
+```
+
+Il est difficile de conclure sur la base d'un tel graphique mais on peut tout de même remarquer que les individus sans antécédents familiaux (famhist) ni enfants (chd) sont plus concentrés sur la gauche et les violets sur la droite.
+
+5\. Réaliser l’algorithme des k-means avec les variables quantitatives pour différents k. Quel est le paramètre k que vous retenez ? Pourquoi ? Représenter les clusters créés sur le plan Axe1-Axe2 de l’ACP. Commenter les valeurs des variables non quantitatives initialement supprimées par rapport aux différents clusters créés par l’algorithme des k-means.
+
+```{r}
+# Algorithme des k-means 
+groupes.kmeans = kmeans(df3.cr , centers =4, nstart =5)
+print (groupes.kmeans)
+```
+
+```{r}
+# Observation du cluster de chaque groupe
+groupes.kmeans$cluster[groupes.kmeans$cluster == 1]
+groupes.kmeans$cluster[groupes.kmeans$cluster == 2]
+groupes.kmeans$cluster[groupes.kmeans$cluster == 3]
+groupes.kmeans$cluster[groupes.kmeans$cluster == 4]
+```
+
+```{r}
+# Visualisation des clusters
+fviz_cluster (groupes.kmeans, data = df3.cr , ellipse.type ="convex", xlab = "Axe 1", ylab = "Axe 2", col.ind = sa_heart$chd)+theme_minimal()
+```
+
+Les 4 clusters n'ont pas la même taille et se superposent sur certaines zones. Il faut que l'on maximise l'inertie inter-classe donc on doit vérifier si k=4 est optimal.
+
+```{r}
+
+inertie_vec = rep (0, times =10)
+for (k in 1:10){
+km = kmeans ( df3.cr, centers=k, nstart =5)
+inertie_vec [ k ] = km$tot.withinss
+}
+plot (1:10, inertie_vec , xlab ="nombre de clusters", type ="b")
+```
+
+3 clusters pourraient aussi être une option. Explorons cette option.
+
+```{r}
+# Algorithme des k-means 
+groupes2.kmeans = kmeans(df3.cr , centers =3, nstart =4)
+
+```
+
+```{r}
+# Observation du cluster de chaque groupe
+groupes2.kmeans$cluster[groupes2.kmeans$cluster == 1]
+groupes2.kmeans$cluster[groupes2.kmeans$cluster == 2]
+groupes2.kmeans$cluster[groupes2.kmeans$cluster == 3]
+```
+
+```{r}
+# Visualisation des clusters
+fviz_cluster (groupes2.kmeans, data = df3.cr , ellipse.type ="convex", xlab = "Axe 1", ylab = "Axe 2", col.ind = sa_heart$chd )+theme_minimal()
+```
+
+L'option à 3 clusters semble être préférable par rapport à celle à 4, car l'inertie inter-classe est maximisée avec moins de zones juxtaposées.
+
+```{r}
+# J'ai tenté d'utiliser ce package après avoir remarqué la présence d'outliers dans les clusters mais il n'est pas disponible pour ma version de R. 
+install.packages("LICORS")
+library(LICORS)
+
+```
+
+```{r}
+set.seed(123)
+centers = kmeanspp(df3.cr, k = 3)
+
+result = kmeans(df3.cr, centers = centers, nstart = 1)
+```
+
+6\. Réaliser l’algorithme du clustering hiérarchique (CAH) avec les variables quantitatives. Couper le dendrogramme pour fournir différents clusters (avec différents nombres de clusters). Quel est le nombre de clusters qui vous paraît le plus adapté ? Pourquoi ? Représenter les clusters créés sur le plan Axe1-Axe2 de l’ACP. Commenter les valeurs des variables non quantitatives initialement supprimées par rapport aux différents clusters définis par l’algorithme de la CAH.
+
+```{r}
+# Construction de la matrice des distances
+d.df3 = dist(df3.cr)
+
+# Classification Ascendante Hierarchique avec distance de Ward
+hc.ward = hclust(dist (df3.cr) , method ="ward.D2")
+
+# Tracer le dendogramme
+plot(hc.ward)
+```
+
+Le dendogramme rend la prise de décision plus difficile. En y regardant de plus près on pourrait dire que k=2 et k=5 entrainent les sauts les plus importants
+
+```{r}
+inertie = sort (hc.ward$height, decreasing = TRUE )
+plot ( inertie [1:10] , type = "s",
+xlab = " Nombre de classe",
+ylab = "Inertie")
+```
+
+Cela est confirmé par ce graphique, même si le saut pour k=2 est beaucoup plus élevé que pour les autres.
+
+```{r}
+clusterCAH = cutree (hc.ward ,2)
+plot(hc.ward)
+# test avec 2 classes
+rect.hclust (hc.ward, 2, border = "green3")
+# test avec 5 classes
+rect.hclust (hc.ward , 5, border = "red")
+
+```
+
+```{r}
+# Afficher les clusters sur le plan Axe1-Axe2 de l’ACP
+fviz_cluster (list (cluster = clusterCAH, data = df3.cr),
+ellipse.type ="convex",
+xlab = "Axe 1", ylab = "Axe 2") +
+theme_minimal()
+```
+
+Avec cette méthode je pense qu'il est préférable de garder seulement 2 clusters, car la baisse d'inertie pour une valeur de k supérieure est vraiment faible. De plus les clusters se superposent partiellement pour 2 et de manière plus importante pour une valeur de k supérieure. On retrouve une certaine cohérence avec nos variables quantitatives. Lorsqu'on choisit k=2 on retrouve les clusters du critère d'existance d'antécédents familiaux (famhist) ou non grâce à la comparaison des valeurs du nuage de la question 4. C'est donc le critère le plus discriminant.
+
+## Module 4
+
+### Partie 1
+
+Pour cette première partie, on utilisera le jeu de données "Ozone.txt" où l’on cherche à expliquer la variable maxO3 (la concentration en ozone) en fonction de diverses variables (températures, nébulosité, vent, pluie).
+
+1.  Charger les données "Ozone.txt" et effectuer quelques statistiques descriptives et graphiques pour explorer les données. Commenter.
+
+```{r}
+# Lire le fichier dans un dataframe
+ozone = read.table("cours1/Data/ozone.txt", header = TRUE, sep = "", quote = "\"", fill = TRUE)
+
+head(ozone)
+```
+
+Le jeu de données comporte 2 variables qualitatives pour 11 quantitatives. Il semble mesurer différents paramètres athmosphériques comme la présence de vent, de pluie, la concentration d'ozone(O3). Il manque par contre un header "date", car si on regarde le jeu de données il y a 13 entrées sur la première ligne contre 14 sur les suivantes
+
+```{r}
+# Lire le fichier en ajoutant un nom de colonne pour la date
+ozone = read.table("cours1/Data/ozone.txt", header = FALSE, sep = "", quote = "\"", fill = TRUE, skip =1)
+colnames(ozone) <- c("date", "maxO3", "T9", "T12", "T15", "Ne9", "Ne12", "Ne15", "Vx9", "Vx12", "Vx15", "maxO3v", "vent", "pluie")
+
+# Afficher les premières lignes pour vérifier
+head(ozone)
+
+```
+
+On retrouve bien nos différentes colonnes désormais
+
+```{r}
+# Afficher les statistiques descriptives
+summary(ozone)
+```
+
+Sans être un expert on peut dire qu'il ne semble pas y avoir de valeurs aberrantes pour les températures qui sont comprises entre 11 et 35 degrés. Les variables Ne ont les même min et max.
+
+```{r}
+library(ggplot2)
+
+# Graphique en barres pour la variable 'pluie'
+ggplot(ozone, aes(x = pluie)) +
+  geom_bar(fill = "lightblue", color = "black") +
+  labs(
+    title = "Distribution du nombre de jours de pluie",
+    x = "Condition de pluie",
+    y = "Nombre de jours"
+  ) +
+  theme_minimal()
+
+```
+
+On peut voir que le jeu de données comporte d'avantage de jour sec que de jour de pluie. Cette variable a 2 valeurs possibles.
+
+```{r}
+# Graphique en barres pour la variable 'vent'
+ggplot(ozone, aes(x = vent)) +
+  geom_bar(fill = "lightgreen", color = "black") +
+  labs(
+    title = "Distribution du nombre de jours de vent",
+    x = "Direction du vent",
+    y = "Nombre de jours"
+  ) +
+  theme_minimal()
+
+```
+
+Les jours de vent d'ouest sont sur-représentés dans le jeu de données.
+
+```{r}
+# Boxplot de maxO3 par direction du vent
+ggplot(ozone, aes(x = vent, y = maxO3v, fill = vent)) +
+  geom_boxplot() +
+  labs(title = "Distribution de maxO3v par direction du vent", x = "Direction du vent", y = "maxO3v") +
+  theme_minimal()
+
+```
+
+La concentration d'ozone (O3) est globalement plus importante en cas de vent du sud. On a quelques valeurs extrêmes pour le vent de nord et d'ouest.
+
+Le jeu de données est composé de 3 variables qui forment des triplets. Ce sont certainement des mesures prises à des heures différentes. Il serait intéressant d'étudier la distribution des données dans ces triplets.
+
+```{r}
+library(ggplot2)
+library(tidyr)
+
+# Transformer les données pour les variables Ne
+ne_data = ozone %>%
+  select(Ne9, Ne12, Ne15) %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
+
+# Définir l'ordre des variables
+ne_data$variable = factor(ne_data$variable, levels = c("Ne9", "Ne12", "Ne15"))
+
+# Boxplots groupés pour Ne9, Ne12, Ne15
+ggplot(ne_data, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot() +
+  labs(title = "Distribution des variables Ne9, Ne12, Ne15",
+       x = "Variable",
+       y = "Valeur") +
+  theme_minimal()
+
+```
+
+Les valeurs de Ne9 sont plus dispersées que Ne12 et sa médiane est à 6 quand celle de Ne15 est à 5.
+
+```         
+```
+
+```{r}
+# Transformer les données pour les variables T
+T_data = ozone %>%
+  select(T9, T12, T15) %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
+
+# Définir l'ordre des niveaux pour 'variable'
+T_data$variable = factor(T_data$variable, levels = c("T9", "T12", "T15"))
+
+# Boxplots groupés pour T9, T12, T15
+ggplot(T_data, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot() +
+  labs(title = "Distribution des variables T9, T12, T15",
+       x = "Variable",
+       y = "Valeur") +
+  theme_minimal()
+```
+
+Si on a 3 valeurs de températures à 3 heures différentes (9h, 12h, 15h) on a logiquement une augmentation de celle-ci pendant la journée.
+
+```{r}
+# Corrélation des variables
+cor(ozone$T9,ozone$T12)
+cor(ozone$T12,ozone$T15)
+```
+
+Les variables sont logiquement fortement corrélées entre elles.
+
+```{r}
+# Transformer les données pour les variables Vx
+vx_data = ozone %>%
+  select(Vx9, Vx12, Vx15) %>%
+  pivot_longer(cols = everything(), names_to = "variable", values_to = "value")
+
+# Définir l'ordre des niveaux pour 'variable'
+vx_data$variable = factor(vx_data$variable, levels = c("Vx9", "Vx12", "Vx15"))
+
+# Boxplots groupés pour Vx9, Vx12, Vx15
+ggplot(vx_data, aes(x = variable, y = value, fill = variable)) +
+  geom_boxplot() +
+  labs(title = "Distribution des variables Vx9, Vx12, Vx15",
+       x = "Variable",
+       y = "Valeur") +
+  theme_minimal()
+```
+
+Les valeurs de vx sont largement négatives mais plus élevées pour V9.
+
+```{r}
+cor(ozone$Vx9,ozone$Vx12)
+cor(ozone$Vx12,ozone$Vx15)
+```
+
+Les variables sont logiquement fortement corrélées entre elles.
+
+2.  Étudier la relation entre la variable maxO3 et T15 (la température à 15h). Effectuer une régression linéaire simple pour expliquer la concentration en ozone en fonction de cette température. Commentez les coefficients et le R². Réalisez le graphe représentant le nuage de points(T15, maxO3) et la regression linéaire.
+
+```{r}
+# Regression linéaire simple
+rl = lm(ozone$maxO3 ~ ozone$T15 )
+
+summary (rl)
+
+```
+
+Le R² ajusté est de 0.59, cela nous indique que maxO3 et T15 sont positivement corrélés. La p-value indique que l'impact de T15 sur maxO3 est significatif statistiquement.
+
+```{r}
+# Avec ggplot et geom _ smooth ()
+library(ggplot2)
+ggplot (ozone) + aes (x = T15 , y = maxO3) + geom_point () +
+geom_smooth( method ="lm") + theme_light()
+```
+
+Le graphique nous confirme le sommaire de la régression linéaire où l'on voit la corrélation positive entre les 2 variables.
+
+```{r}
+residus = rstudent ( rl )
+plot ( residus , pch =15, cex =.5, ylab =" Résidus ", ylim =c( -3,3))
+abline ( h =c( -2,0,2) , lty =c(2,1,2))
+```
+
+L'analyse des résidus studentisés nous montre que 95% d'entre eux se trouvent dans l'intervalle \[-2; 2\]
+
+3\. On veut à présent effectuer une régression linéaire multiple. Sélectionner des variables en justifiant votre choix et effectuer une telle régression en commentant les résultats.
+
+```{r}
+# Regression linéaire multiple
+
+# On doit prendre les variables T, Ne et Vx à la même heure
+rl = lm(maxO3 ~ T15 + Ne15 + Vx15 , data = ozone)
+
+summary ( rl )
+
+
+```
+
+Ici on voit que Ne15 est une variable non significative tandis que Vx15 l'est. L'ajout de cette variable a fait augmenter le R². On peut donc retenir T15 et Vx15 pour notre modèle.
+
+```{r}
+rl2 = lm(maxO3 ~ T15 + Vx15 , data = ozone)
+
+summary ( rl2 )
+```
+
+Le R² ajusté a légèrement augmenté.
+
+Maintenant il serait intéressant d'utiliser une variable qualitative dans notre modèle. Pour cela nous devons encoder par exemple la variable pluie en variable numérique.
+
+```{r}
+# Convertir la variable 'pluie' en numérique (par exemple, 0 pour "Sec", 1 pour "Pluie")
+ozone$pluie = as.factor(ozone$pluie)
+ozone$pluie = as.numeric(ozone$pluie) - 1
+```
+
+```{r}
+# Effectuer la régression linéaire multiple
+model <- lm(maxO3 ~ T15 + Vx15 + pluie, data = ozone)
+
+# Afficher le résumé du modèle
+summary(model)
+```
+
+L'ajout de cette variable est pertinente pour notre modèle, car celle-ci est significative d'après la p-value et le R² ajusté a augmenté à 0.6451.
+
+### Partie 2
+
+Pour cette seconde partie, on utilisera le jeu de données AdClick.csv où l’on cherche à expliquer la variable click qui vaut 1 si l’utilisateur a cliqué sur une publicité (0 sinon) à partir de variables explicatives (le genre, l’âge et le salaire estimé).
+
+1.  Charger les données AdClick.csv et effectuer quelques statistiques descriptives et graphiques pour explorer les données. Commenter.
+
+```{r}
+# Import AdClick
+adclick = read.table("cours1/Data/AdClick.csv", header = TRUE, sep =",")
+# Lire les données
+class(adclick)
+# Afficher les premières lignes du dataframe
+head(adclick)
+```
+
+Le jeu se compose de 5 variables toutes numériques. La population étudiée comporte 400 individus agés de 18 à 60 ans dont 204 femmes pour 196 hommes. L'age median est de 37 ans. Il y a eu 143 clicks pour 257 absence de click donc le jeu de données est assez équilibré. Cela devrait nous permettre de prendre des décisions intéressantes pour un expert métier même si le jeu de données est d'une taille relativement faible et qu'il faudrait l'enrichir de préférence.
+
+```{r}
+# Statistiques descriptives
+summary(adclick)
+#summary(adclick)
+table_genre = table(adclick$Gender)
+table_click = table(adclick$Click)
+print(table_genre)
+print(table_click)
+hist(adclick$Click)
+```
+
+```{r}
+# Visualisation
+boxplot(EstimatedSalary ~ Gender, data = adclick,
+        main = "Boxplot du salaire par genre",
+        xlab = "Genre", ylab = "Salaire estimé",
+        col = c("lightblue", "lightgreen"))
+```
+
+On voit avec la médiane que les femmes ont des salaires légèrement supérieurs à ceux des hommes.
+
+```{r}
+# Calcul de la proportion a avoir cliqué selon le genre
+
+# Calculer la proportion
+prop_click = aggregate(Click ~ Gender, data = adclick, FUN = function(x) mean(x == 1))
+print(prop_click)
+
+# Optionnel : Tracer un barplot
+barplot(prop_click$Click, names.arg = prop_click$Gender,
+        main = "Proportion de Click = 1 par genre",
+        xlab = "Genre", ylab = "Proportion",
+        col = c("lightblue", "lightgreen"))
+
+```
+
+```{r}
+cor(adclick$EstimatedSalary, adclick$Click,)
+```
+
+Il y a une faible corrélation entre la variable salaire et le click.
+
+```{r}
+# Convertir la variable 'genre' en numérique (par exemple, 1 pour "Male", 0 pour "Femme")
+adclick$Gender = as.factor(adclick$Gender)
+adclick$Gender = as.numeric(adclick$Gender) - 1
+
+str(adclick$Gender)
+```
+
+```{r}
+# Corrélation entre le genre et click
+cor(adclick$Gender, adclick$Click)
+
+```
+
+A priori il n'y a pas de corrélation entre le genre et le fait de cliquer. Cette publicité n'est peut-être pas ciblé sur un genre.
+
+```{r}
+cor(adclick$Age, adclick$Click)
+```
+
+La variable age est la plus corrélée au click, ce qui laisse penser que cette publicité touche d'avantage certaines tranches d'age.
+
+2.  Effectuer une régression logistique pour expliquer les clics. Commenter les résultats et commenter les erreurs de classifications grâce à une table croisant le clic prédit et le clic effectif.
+
+```{r}
+str(adclick)
+```
+
+On a bien seulement des variables numériques désormais.
+
+```{r}
+# regression logistique
+logit_complet = glm(adclick$Click ~., data = adclick, family = binomial)
+summary(logit_complet)
+```
+
+Comme on l'avait entrevu avec les corrélations, la variable gender n'est pas significative de même que l'index. En revanche, l'age et le salaire estimé le sont. On peut donc retirer les premières variables pour améliorer notre modèle. Cela est aussi confirmé par la minimisation de l'AIC ci-dessous.
+
+```{r}
+final.lm = step ( logit_complet )
+```
+
+```{r}
+# Regression logistique avec variables pertinentes
+
+logit_step = glm(adclick$Click ~ adclick$Age + adclick$EstimatedSalary , data = adclick, family = binomial)
+
+# Statistiques de la regression
+summary(logit_step)
+```
+
+On a bien nos 2 variables explicatives qui sont significatives avec l'AIC minimisé.
+
+```{r}
+# Prédiction des probabilités :
+prev = predict (logit_step, type ="response")
+# Quand la probabilité est > 0.5 alors y = 1 ; sinon y = 0
+prev = as.numeric (prev >0.5)
+# Tableau de fréquence des prédictions 0/1
+table (prev)
+hist(prev)
+```
+
+Le modèle a prédit 123 clicks vs 143 en réalité et 277 non-click vs 257.
+
+```{r}
+# Taux de bonnes prédictions
+mean ( prev == adclick$Click )
+table (prev, adclick$Click )
+```
+
+On a taux de bonne prédiction de 84,5% ce qui est satisfaisant, car le modèle garde une bonne capacité de généralisation et n'est pas trop spécialisé sur ces données.
+
+Nous avons 236 non-clicks qui ont été predits correctement comme des non-clicks. 102 clicks prédits correctement comme des clicks. Il y a eu 21 clicks prédits qui n'en étaient pas et 41 non-clicks qui en étaient. Le jeu étant assez équilibré entre click=0 et click=1, cet outil de prise de décision aura un intérêt business mais la taille du jeu de données est une limite à surveiller. Il est possible de calculer la taillle de l'échantillon minimale pour atteindre la significativité statistique mais cela dépasse les questions posées ici.
+
+3.  Construisez un arbre de classification, représenter-le et commenter les résultats de la même manière.
+
+```{r}
+# Arbre de décision
+library ( rpart )
+arbre = rpart (adclick$Click  ~. , data = adclick , method="class", cp =0.02, positive="1")
+arbre
+```
+
+```{r}
+library (rpart.plot)
+# tracer l'arbre
+rpart.plot (arbre, main ="Représentation de l’arbre")
+
+```
+
+L'arbre nous indique sur le premier noeud que 36% de l'échantillon a cliqué (soit 143 sur 400). Le 2è noeud à gauche dit que 71% de l'échantillon a moins de 43 ans et 16% ont cliqué. La feuille verte à droite dit que 29% ont plus de 43 ans et ils représentent 84% de ceux à avoir cliqué. Dans la feuille bleue à gauche dit que 60% des moins de 43 ans gagne moins de 90500. Ce sous-groupe représente 4,0% de ceux parmi les moins de 43 ans à avoir cliqué. La feuille centrale dit que 11% des moins de 43 gagnent moins de 90500. Ils représentent 84% de ceux de moins de 43 ans à avoir cliqué.
+
+```{r}
+# Prédictions sous forme de probabilités
+pred_arbre = predict(arbre, data = adclick)
+# Prédictions sous forme de variable binaire
+pred_arbre_cl = predict(arbre, data = adclick, type = "class")
+# Comparaison avec les " vraies " valeurs de Y
+table (pred_arbre_cl , adclick$Click)
+# Taux de bonnes prédictions
+mean (pred_arbre_cl == adclick$Click)
+```
+
+On peut voir que l'arbre de décision est plus performant que la regression logistique avec un taux de 91,5%. C'est le modèle qu'on gardera entre les 2.
+
+## Module 5
+
+Présentation du jeu de donnée choisi.
+
+Source : Kaggle
+
+Lien : <https://www.kaggle.com/datasets/suvidyasonawane/student-academic-placement-performance-dataset>
+
+Titre : **Prédiction de Placement Académique des Étudiants – Projet de Machine Learning**
+
+Le dataset contient **5 000 enregistrements d’étudiants**, avec les 17 **variables explicatives** résumées ici :
+
+-   Performance académique (SSC, HSC, diplôme, CGPA)
+
+-   Scores en compétences techniques et soft skills
+
+-   Nombre de stages, projets et expérience professionnelle
+
+-   Certifications, taux de présence et retards (backlogs)
+
+-   Genre (Homme/Femme)
+
+Variable cible à prédire :
+
+-   Statut de placement : Est ce qu'un jeune diplomé a trouvé un travail à la suite de ses études ?
+
+Problématique : Quels sont les facteurs clés influançants l'embauche ?
+
+#### EDA - Analyse exploratoire
+
+```{r}
+# Lire le fichier dans un dataframe
+academic= read.table("cours1/Data/academic.csv", header = TRUE, sep = ",", quote = "\"", dec=".", fill = TRUE)
+
+head(academic)
+```
+
+On a bien 18 colonnes dans ce jeu de données.
+
+```{r}
+colSums(is.na(academic))
+
+```
+
+Ce jeu de données Kaggle ne présentait pas de valeurs manquantes selon la documentation, et cela est confirmé par cette vérification.
+
+```{r}
+str(academic)
+```
+
+Voici quelques visualitions.
+
+```{r}
+# Charger les librairies nécessaires
+library(ggplot2)
+
+# Diagramme en barres pour la variable gender
+ggplot(academic, aes(x = gender)) + geom_bar(fill = "steelblue") + labs(title = "Répartition par genre", x = "Genre", y = "Nombre d'étudiants") + theme_minimal()
+```
+
+Il y a autant d'hommes que de femmes dans ce jeu de données.
+
+```{r}
+# Diagramme en barres pour la variable placement_status
+ggplot(academic, aes(x = placement_status)) + geom_bar(fill = "lightgreen") + labs(title = "Distribution des embauches", x = "Statut d'embauche", y = "Nombre d'étudiants") + theme_minimal()
+```
+
+Le jeu de données présente un déséquilibre. Moins de 1000 jeunes diplômés ont été embauchés, il faudra faire attention lorsque l'on définira la taille du jeu d'entrainement et de test.
+
+```{r}
+
+```
+
+Il y a 2 variables qualitatives que l'on devra encoder pour pouvoir faire notre analyse extracurricular_activities et gender. La variable student Id n'est pas non plus pertinente pour notre analyse.
+
+```{r}
+# Convertir la variable 'gender' en numérique (0 pour "Female", 1 pour "Male")
+academic$gender = as.factor(academic$gender)
+academic$gender = as.numeric(academic$gender) - 1
+
+# Convertir la variable 'extracurricular_activities' en numérique (0 pour "No", 1 pour "Yes")
+academic$extracurricular_activities = as.factor(academic$extracurricular_activities)
+academic$extracurricular_activities = as.numeric(academic$extracurricular_activities) - 1
+
+# Convertir 'placement_status' en facteur (0 et 1 doivent être des niveaux) pour ne pas avoir d'erreur. 
+academic$placement_status = factor(academic$placement_status, levels = c(0, 1))
+
+str(academic)
+```
+
+Le placement status doit bien être encodé en factor pour ne pas avoir d'erreur sur les résultats des modèles.
+
+```{r}
+# statistiques descriptives 
+summary(academic)
+```
+
+Il ne semble pas y avoir de valeurs aberrantes dans les notes attribuées. Par exemple pas de notes négatives ou de notes supérieures à 100. L'échantillon étudié a plutôt de bonnes notes avec une médiane proche de 70/100 à l'examen d'entrée ou encore aux examens techniques et softskills. Les étudiants ont par contre eu en moyenne 2,5 rattrapages. L'expérience professionnelle mediane était de 12 mois.
+
+```{r}
+# Boxplot cgpa
+ggplot(academic, aes(x = placement_status, y = cgpa, group = placement_status)) +
+  geom_boxplot(aes(fill = placement_status)) +
+  labs(title = "Répartition du CGPA par statut de placement", x = "Statut", y = "CGPA") +
+  theme_minimal()
+
+```
+
+Comme on peut le voir sur ce boxplot, les étudiants embauchés avaient globalement de meilleures notes. La médiane est à moins de 7.5 pour les non-embauchés et environ 1 point de plus pour ceux qui ont été embauchés.
+
+```{r}
+library(corrplot)
+
+# Calculer la matrice de corrélation
+cor_matrix <- cor(academic, use = "complete.obs")
+
+# Créer le graphique avec des paramètres optimisés pour la lisibilité
+corrplot(cor_matrix, type="upper", order="hclust", tl.col="black", tl.srt=45)
+```
+
+La matrice de corrélation croisée que l'on peut visionner en cliquant sur la fenêtre du graphique permet de voir rapidement quelles variables sont corrélées entre elles. Ici cgpa, soft_skills et technical_skill sont positivement corrélés au statut d'embauche tandis que les rattrappages le sont négativement. Autrement dit un étudiant ayant eu un ou plusieurs rattrappages serait moins susceptible d'être en emploi.
+
+#### Prétraitement
+
+Il faut maintenant diviser notre jeu de données pour l'entrainement et la validation
+
+```{r}
+
+# Chargement de la librairie
+library ( caret )
+library ( class )
+library(dplyr)
+
+# Suppression des 2 variables inutiles
+academic1 = select(academic, -student_id,-salary_package_lpa)
+
+str(academic1)
+
+
+```
+
+Les 2 variables inutiles ont été supprimées.
+
+```{r}
+# Définir la graine pour la reproductibilité
+set.seed(1200)
+```
+
+On doit maintenant centrer et réduire les données. Cela consiste à mettre toutes les données sur une même échelle afin que les variables à forte amplitude ne domine pas les autres. On met une moyenne 0 et une variance 1. Ensuite on applique ces paramètres au train et au test.
+
+```{r}
+
+# Créer un échantillon d'entraînement (70%) et de test (30%)
+train_index = createDataPartition(academic1$placement_status, p = 0.7, list=FALSE)
+train = academic1[train_index, ]
+test = academic1[-train_index, ]
+
+#
+
+# Variables catégorielles (déjà encodées)
+categorical_vars = c("gender", "extracurricular_activities")
+
+# Variables numériques (à scaler)
+numeric_vars = setdiff(names(train), c(categorical_vars, "placement_status"))
+
+# Prétraitement : centrage et scaling
+pre_process = preProcess(train[, numeric_vars], method = c("center", "scale"))
+
+# Appliquer le scaling
+X_train_scaled = predict(pre_process, train[, numeric_vars])
+X_test_scaled = predict(pre_process, test[, numeric_vars])
+
+# Reconstruire les jeux de données complets
+train_processed = cbind(
+  train[, c(categorical_vars, "placement_status")],  # Variables catégorielles + cible
+  X_train_scaled
+)
+
+test_processed = cbind(
+  test[, c(categorical_vars, "placement_status")],    # Variables catégorielles + cible
+  X_test_scaled
+)
+
+
+# Vérifier la taille de l'échantillon d'entrainement et de test
+dim(train)
+dim(test)
+
+```
+
+Le jeu d'entrainement contient 3500 observations et celui de test 1500.
+
+On applique une normalisation (moyenne 0 et variance 1) sur le jeu d'entrainement. Ensuite on applique ces paramètres au test.
+
+#### KNN
+
+Ce modèle classifie une observation en fonction des k plus proches voisins. Il est peu performant sur des jeux de données volumineux mais devrait convenir pour celui choisi.
+
+```{r}
+# Grille de k
+grille.K = data.frame ( k = seq (1,30,by=1))
+# Echantillon test avec 5 blocs de validation croisée
+ctrl = trainControl ( method ="cv", number =5)
+# Ech train et estimation
+knn = train ( placement_status ~. , data = train_processed, method ="knn",
+trControl = ctrl, tuneGrid = grille.K )
+
+# Performance selon k
+knn
+# Afficher graphique
+plot (knn) 
+knn$bestTune
+
+
+```
+
+L'erreur diminue très fortement jusqu'à k=6 puis beaucoup plus doucement ensuite. La valeur retenue ici est k=13.
+
+```{r}
+# Prédictions
+knn_pred = predict(knn, test_processed)
+
+# Matrice de confusion
+confusionMatrix(knn_pred, test_processed$placement_status, positive="1")
+
+```
+
+J'ai ajouté comme parapètre positive=1 dans la matrice de confusion, car tout l'enjeu est de prédire au mieux cette variable. Notre modèle atteint une précison de 91,09% ce qui est très satisfaisant. Vu le déséquilbre dans la variable à prédire, le Recall est aussi à surveiller. Ici il est de 0,5366 (Specificity) donc le modèle détecte correctement seulement 53,66% des cas où placement_status=1. Cela est assez faible.
+
+#### Random Forest
+
+Ce modèle est un ensemble d'arbres de décisions entrainé sur des sous-échantillons aléatoires des données. Il est robuste aux outliers et gère les variables catégorielles bien qu'il soit moins facile à visualiser qu'un seul arbre. L'hyperparamètre mtry est le nombre de variables aléatoires par arbre). On utilise un échantillonnage "Out-of-bag".
+
+```{r}
+# Grille de mtry à tester : de 1 à 15
+grille.mtry = data.frame (mtry = seq(1,15,by=1))
+# Ech test
+ctrlforet = trainControl( method ="oob")
+# Ech train et estimation
+rf = train(placement_status ~. , data = train_processed , method ="rf",
+trControl = ctrlforet, tuneGrid = grille.mtry )
+# Performance
+rf
+
+
+```
+
+La forêt aléatoire obtient les meilleurs résultats avec une valeur de mtry=3.
+
+```{r}
+# Prédictions
+rf_pred = predict(rf, test_processed)
+
+# Table de contingence (matrice de confusion)
+
+confusionMatrix(rf_pred, test_processed$placement_status, positive="1")
+```
+
+L'accuracy de ce modèle est proche de 100% ce qui laisse penser à un overfitting.
+
+#### SVM
+
+Ce modèle consiste à trouver un hyperplan séparant aux mieux les classes en maximisant la marge. Il est performant pour des classifications binaires. On peut utiliser un noyau pour transporter les données dans un espace de plus grande dimension et les rendre linéairement séparables.
+
+```{r}
+library(kernlab)
+# Estimation sur train
+svm = ksvm(placement_status ~. , data = train_processed , kernel="vanilladot",C=1)
+
+svm
+
+# Prédictions sur test
+pred_svm = predict(svm, newdata = test_processed )
+
+confusionMatrix(pred_svm, test_processed$placement_status, positive = "1")
+
+
+
+```
+
+J'ai utilisé comme baseline pour le SVM un kernel Vanilladot qui indique les variables ne sont pas transportées dans un espace de plus grande dimensions. Le coût attribué aux valeurs mal classées est de 1. On voit que ce modèle est un peu moins performant avec une précision de 0,8793. La sensitivité est légèrement supérieure que le KNN avec 54,05%.
+
+```{r}
+# Entraîner le modèle SVM
+svm_model1 = train(placement_status ~ .,
+                   data = train_processed,
+                   method = "svmRadial",
+                   trControl = ctrl,
+                   tuneLength = 5)
+
+# Résumé du modèle
+print(svm_model1)
+```
+
+Cette fois-ci on utilise un noyau svm-radial et on laisse la fonction train du package carret sélectionner C. La valeur de C retenue est alors 4.
+
+```{r}
+# Prédictions
+svm_pred1 = predict(svm_model1, test_processed)
+
+# Table de contingence (matrice de confusion)
+confusionMatrix(svm_pred1, test_processed$placement_status, positive = "1")
+```
+
+On obtient un modèle avec une performance supérieure, une précision de 0,9513 et avec une sensitivty de 80,69% soit la proportion de placement_status=1 correctement classés.
+
+#### Conclusion. 
+
+Selon les tests effectués voici le classement de la précision des modèles.
+
+1 - Random Forest
+
+2 - SVM (radial)
+
+3 - KNN
+
+4 - SVM (sans noyau)
+
+Cependant la précision n'est dans ce cas de figure pas le critère le plus pertinent. En effet on souhaite avant tout prédire placement_status=1, or ce cas de figure est 4 fois moins nombreux que placement_status=0. En regardant la spécificité le SVM(Radial) est beaucoup plus performant. Enfin, on peut laisser de côté la forêt aléatoire, car la précision de 100% indique un sur-apprentissage sur le jeu d'entrainement. Il est fort probable que ses performances seront médiocres avec de nouvelles données. Il faudrait de plus approfondir ce point avec des techniques plus avancées comme le rééchantillonnage pour favoriser y=1, ajouter d'autres données, tracer les courbes ROC. Le SVM radial est le modèle le plus performant avec la meilleure capacité de généralisation sur notre benchmark.
